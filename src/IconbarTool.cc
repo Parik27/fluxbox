@@ -594,7 +594,7 @@ IconButton *IconbarTool::makeButton(Focusable &win) {
     fbdbg<<"IconbarTool::addWindow(0x"<<&win<<" title = "<<win.title().logical()<<")"<<endl;
 
     IconButton *button = new IconButton(m_icon_container, m_focused_theme,
-                                        m_unfocused_theme, win);
+                                        m_unfocused_theme, win, true, false);
 
     RefCmd focus_cmd(new ::FocusCommand(win));
     RefCmd menu_cmd(new ::ShowMenu(*fbwin));

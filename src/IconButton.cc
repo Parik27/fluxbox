@@ -26,6 +26,8 @@
 
 #include "Screen.hh"
 #include "Window.hh"
+#include "WinClient.hh"
+#include "Workspace.hh"
 
 #include "FbTk/App.hh"
 #include "FbTk/Command.hh"
@@ -41,7 +43,8 @@
 
 IconButton::IconButton(const FbTk::FbWindow &parent,
         FbTk::ThemeProxy<IconbarTheme> &focused_theme,
-        FbTk::ThemeProxy<IconbarTheme> &unfocused_theme, Focusable &win):
+        FbTk::ThemeProxy<IconbarTheme> &unfocused_theme, Focusable &win,
+	bool show_ws, bool show_tab):
     FbTk::TextButton(parent, focused_theme->text().font(), win.title()),
     m_win(win),
     m_icon_window(*this, 1, 1, 1, 1,
@@ -50,7 +53,9 @@ IconButton::IconButton(const FbTk::FbWindow &parent,
     m_use_pixmap(true),
     m_has_tooltip(false),
     m_theme(win, focused_theme, unfocused_theme),
-    m_pm(win.screen().imageControl()) {
+    m_pm(win.screen().imageControl()),
+    m_show_workspace(show_ws),
+    m_show_tab(show_tab) {
 
     m_title_update_timer.setTimeout(updateLaziness());
     m_title_update_timer.fireOnce(true);
@@ -256,8 +261,27 @@ void IconButton::clientTitleChanged() {
 void IconButton::setupWindow() {
     m_icon_window.clear();
     FbTk::FbString title = m_win.title().logical();
-    if (m_win.fbwindow() && m_win.fbwindow()->isIconic())
+    if (m_win.fbwindow() && m_win.fbwindow()->isIconic()) {
         title = IconbarTool::iconifiedPrefix() + title + IconbarTool::iconifiedSuffix();
+    }
+    if (m_show_workspace && m_win.fbwindow()) {
+        Workspace *space = m_win.screen().getWorkspace(m_win.fbwindow()->workspaceNumber());
+        if (space)
+            title = "<" + space->name() + "> " + title;
+    }
+    if (m_show_tab && m_win.fbwindow() && m_win.fbwindow()->clientList().size() > 1) {
+        int tab_num = 1;
+        FluxboxWindow::ClientList::iterator it = m_win.fbwindow()->clientList().begin();
+        FluxboxWindow::ClientList::iterator end = m_win.fbwindow()->clientList().end();
+        while (it != end) {
+            if (static_cast<Focusable*>(*it) == &m_win)
+                break;
+            tab_num++;
+            it++;
+        }
+        title = "<" + std::to_string(tab_num) + "> " + title;
+    }
+
     setText(title);
     FbTk::TextButton::clear();
 }

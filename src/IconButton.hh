@@ -42,7 +42,7 @@ public:
     IconButton(const FbTk::FbWindow &parent,
                FbTk::ThemeProxy<IconbarTheme> &focused_theme,
                FbTk::ThemeProxy<IconbarTheme> &unfocused_theme,
-               Focusable &window);
+               Focusable &window, bool show_ws=false, bool show_tab=true);
     virtual ~IconButton();
 
     void exposeEvent(XExposeEvent &event);
@@ -98,6 +98,9 @@ private:
     FbTk::SignalTracker m_signals;
     FbTk::Signal<> m_title_changed;
     FbTk::Timer m_title_update_timer;
+
+    bool m_show_workspace;
+    bool m_show_tab;
 };
 
 #endif // ICONBUTTON_HH
