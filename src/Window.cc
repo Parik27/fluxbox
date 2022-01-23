@@ -820,7 +820,7 @@ WinClient *FluxboxWindow::findClient(Window win) {
 }
 
 /// raise and focus next client
-void FluxboxWindow::nextClient() {
+void FluxboxWindow::nextClient(bool warp) {
     if (numClients() <= 1)
         return;
 
@@ -830,13 +830,15 @@ void FluxboxWindow::nextClient() {
         return;
 
     ++it;
-    if (it == m_clientlist.end())
+    if (it == m_clientlist.end()) {
+        if (!warp) return;
         it = m_clientlist.begin();
+    }
 
     setCurrentClient(**it, isFocused());
 }
 
-void FluxboxWindow::prevClient() {
+void FluxboxWindow::prevClient(bool warp) {
     if (numClients() <= 1)
         return;
 
@@ -845,8 +847,10 @@ void FluxboxWindow::prevClient() {
     if (it == m_clientlist.end())
         return;
 
-    if (it == m_clientlist.begin())
+    if (it == m_clientlist.begin()) {
+        if (!warp) return;
         it = m_clientlist.end();
+    }
     --it;
 
     setCurrentClient(**it, isFocused());

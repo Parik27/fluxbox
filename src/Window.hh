@@ -155,9 +155,14 @@ public:
      */
     WinClient *findClient(Window win);
     /// select next client
-    void nextClient();
+    void nextClient(bool warp);
     /// select previous client
-    void prevClient();
+    void prevClient(bool warp);
+
+    void nextClient() { nextClient(true); }
+    void prevClient() { prevClient(true); }
+    void rightClient() { nextClient(false); }
+    void leftClient() { prevClient(false); }
     /// move the current client to the left
     void moveClientLeft();
     /// move the current client to the right

@@ -92,6 +92,10 @@ FbTk::Command<void> *createCurrentWindowCmd(const std::string &command,
         return new CurrentWindowCmd(&FluxboxWindow::nextClient);
     else if (command == "prevtab")
         return new CurrentWindowCmd(&FluxboxWindow::prevClient);
+    else if (command == "righttab")
+        return new CurrentWindowCmd(&FluxboxWindow::rightClient);
+    else if (command == "lefttab")
+        return new CurrentWindowCmd(&FluxboxWindow::leftClient);
     else if (command == "movetableft")
         return new CurrentWindowCmd(&FluxboxWindow::moveClientLeft);
     else if (command == "movetabright")
@@ -124,6 +128,8 @@ REGISTER_COMMAND_PARSER(stickwindow, createCurrentWindowCmd, void);
 REGISTER_COMMAND_PARSER(toggledecor, createCurrentWindowCmd, void);
 REGISTER_COMMAND_PARSER(nexttab, createCurrentWindowCmd, void);
 REGISTER_COMMAND_PARSER(prevtab, createCurrentWindowCmd, void);
+REGISTER_COMMAND_PARSER(righttab, createCurrentWindowCmd, void);
+REGISTER_COMMAND_PARSER(lefttab, createCurrentWindowCmd, void);
 REGISTER_COMMAND_PARSER(movetableft, createCurrentWindowCmd, void);
 REGISTER_COMMAND_PARSER(movetabright, createCurrentWindowCmd, void);
 REGISTER_COMMAND_PARSER(detachclient, createCurrentWindowCmd, void);
