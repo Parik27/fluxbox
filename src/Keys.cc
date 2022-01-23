@@ -259,9 +259,13 @@ void Keys::grabWindow(Window win) {
     if (win_it == m_window_map.end())
         return;
 
-    m_handler_map[win]->grabButtons();
+    // Fix bug where clicking on dropdown menus won't work on Chromium :/
+    if ((win_it->second & Keys::ON_WINDOW) == 0)
+        m_handler_map[win]->grabButtons();
+
     t_key::keylist_t::iterator it = m_keylist->keylist.begin();
     t_key::keylist_t::iterator it_end = m_keylist->keylist.end();
+
     for (; it != it_end; ++it) {
         // keys are only grabbed in global context
         if ((win_it->second & Keys::GLOBAL) > 0 && (*it)->type == KeyPress)
