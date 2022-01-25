@@ -1137,10 +1137,17 @@ void FluxboxWindow::updateSizeHints() {
 
 void FluxboxWindow::grabButtons() {
 
-    // needed for click to focus
-    XGrabButton(display, Button1, AnyModifier,
+    FocusControl& focus_control = screen().focusControl();
+
+    // Ungrab it first so we only grab it if window is not in focus
+    XUngrabButton(display, Button1, AnyModifier, frame().window().window());
+
+    if (!isFocused()) {
+        XGrabButton(display, Button1, AnyModifier,
                 frame().window().window(), True, ButtonPressMask,
                 GrabModeSync, GrabModeSync, None, None);
+    }
+
     XUngrabButton(display, Button1, Mod1Mask|Mod2Mask|Mod3Mask,
                   frame().window().window());
 }
@@ -1884,6 +1891,11 @@ void FluxboxWindow::setFocusFlag(bool focus) {
         notifyFocusChanged();
         if (m_client)
             m_client->notifyFocusChanged();
+
+        // Update key grabbing on focus change
+        Fluxbox::instance()->keys()->registerWindow(frame().window().window(),
+                                                *this, Keys::ON_WINDOW);
+
         Fluxbox::instance()->keys()->doAction(focus ? FocusIn : FocusOut, 0, 0,
                                               Keys::ON_WINDOW, m_client);
     }
