@@ -34,6 +34,7 @@
 #include "FbAtoms.hh"
 #include "FocusControl.hh"
 #include "Layer.hh"
+#include "Tagging.hh"
 
 #include "defaults.hh"
 #include "Debug.hh"
@@ -443,6 +444,8 @@ Fluxbox::Fluxbox(int argc, char **argv,
 #ifdef REMEMBER
     addAtomHandler(new Remember()); // for remembering window attribs
 #endif // REMEMBER
+
+    addAtomHandler(new Tagging());
 
     // init all "screens"
     STLUtil::forAll(m_screens, bind1st(mem_fun(&Fluxbox::initScreen), this));

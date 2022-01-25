@@ -24,6 +24,7 @@
 // Tools
 #include "ButtonTool.hh"
 #include "ClockTool.hh"
+#include "TaggingTool.hh"
 #ifdef USE_SYSTRAY
 #include "SystemTray.hh"
 #endif
@@ -98,7 +99,13 @@ ToolbarItem *ToolFactory::create(const std::string &name, const FbTk::FbWindow &
 #ifdef USE_SYSTRAY
         item = new SystemTray(parent, dynamic_cast<ButtonTheme &>(*m_systray_theme), screen());
 #endif
-    } else if (name == "clock") {
+    } else if (name == "taggingws") {
+        item = new TaggingTool(parent, screen(), TaggingTool::TAGGING_WORKSPACE,
+                m_focused_iconbar_theme, m_unfocused_iconbar_theme);
+    } else if (name == "taggingwin") {
+        item = new TaggingTool(parent, screen(), TaggingTool::TAGGING_WINDOW,
+                m_focused_iconbar_theme, m_unfocused_iconbar_theme);
+    }else if (name == "clock") {
         item = new ClockTool(parent, m_clock_theme, screen(), tbar.menu());
     } else if (name.find("spacer") == 0) {
         int size = -1;

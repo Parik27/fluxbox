@@ -272,6 +272,9 @@ fluxbox_SOURCES = \
 	src/cli_cfiles.cc \
 	src/cli_options.cc \
 	src/cli_info.cc \
+	src/Tagging.cc \
+	src/TaggingCmd.cc \
+	src/TaggingTool.cc \
 	${EWMH_SOURCE} \
 	${REMEMBER_SOURCE} \
 	${SLIT_SOURCE} \
