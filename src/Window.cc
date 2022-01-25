@@ -730,6 +730,7 @@ void FluxboxWindow::attachClient(WinClient &client, int x, int y) {
         }
     }
     frame().reconfigure();
+    grabButtons();
 }
 
 
@@ -1137,19 +1138,17 @@ void FluxboxWindow::updateSizeHints() {
 
 void FluxboxWindow::grabButtons() {
 
-    FocusControl& focus_control = screen().focusControl();
+    // needed for click to focus
 
-    // Ungrab it first so we only grab it if window is not in focus
-    XUngrabButton(display, Button1, AnyModifier, frame().window().window());
+    ClientList::iterator client_it = m_clientlist.begin();
+    const ClientList::iterator client_it_end = m_clientlist.end();
 
-    if (!isFocused()) {
-        XGrabButton(display, Button1, AnyModifier,
-                frame().window().window(), True, ButtonPressMask,
+    for (; client_it != client_it_end; ++client_it) {
+        WinClient &client = *(*client_it);
+        XGrabButton(display, Button1, AnyModifier, client.window(), True, ButtonPressMask,
                 GrabModeSync, GrabModeSync, None, None);
+        XUngrabButton(display, Button1, Mod1Mask | Mod2Mask | Mod3Mask, client.window());
     }
-
-    XUngrabButton(display, Button1, Mod1Mask|Mod2Mask|Mod3Mask,
-                  frame().window().window());
 }
 
 
@@ -2464,16 +2463,13 @@ void FluxboxWindow::buttonPressEvent(XButtonEvent &be) {
 
 
     // - refeed the event into the queue so the app or titlebar subwindow gets it
-    if (be.subwindow)
-        XAllowEvents(display, ReplayPointer, CurrentTime);
-    else
-        XAllowEvents(display, SyncPointer, CurrentTime);
+    XAllowEvents(display, ReplayPointer, CurrentTime);
 
     // if nothing was bound via keys-file then
     // - raise() if clickRaise is enabled
     // - hide open menues
     // - focus on clickFocus
-    if (frame().window().window() == be.window) {
+    if (m_client->window() == be.window) {
         if (screen().clickRaises())
             raise();
 
