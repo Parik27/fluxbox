@@ -613,6 +613,18 @@ void FocusControl::setFocusedWindow(WinClient *client) {
     if (client && client != expectingFocus() && s_focused_window &&
         (!(screen && screen->focusControl().isCycling())) &&
         ((s_focused_fbwindow->focusProtection() & Focus::Lock) ||
+
+         // Focus model that I personally prefer:
+         // Don't change/restore focus if:
+         // 1. The new window is in a different workspace
+         // 2. I'm typing
+         // Unless
+         // 1. Focus protection for the window requests that it focus
+
+         ((client->fbwindow()->focusProtection() & Focus::Gain) == 0 && (s_focused_fbwindow->isTyping() || (client->fbwindow() &&
+           client->fbwindow()->workspaceNumber() != s_focused_fbwindow->workspaceNumber())))
+
+         ||
         (client && client->fbwindow() && (client->fbwindow()->focusProtection() & Focus::Deny)))) {
         s_focused_window->focus();
         return;

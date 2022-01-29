@@ -2122,7 +2122,9 @@ bool FluxboxWindow::focusRequestFromClient(WinClient &from) {
     FluxboxWindow *cur = FocusControl::focusedFbWindow();
     WinClient *client = FocusControl::focusedWindow();
     if ((from.fbwindow() && (from.fbwindow()->focusProtection() & Focus::Deny)) ||
-        (cur && (cur->focusProtection() & Focus::Lock))) {
+        (cur && (cur->focusProtection() & Focus::Lock)) ||
+        (cur && cur->isTyping()) ||
+        (cur && from.fbwindow() && cur->workspaceNumber() != from.fbwindow()->workspaceNumber())) {
         ret = false;
     } else if (cur && getRootTransientFor(&from) != getRootTransientFor(client)) {
         ret = !(cur->isFullscreen() && getOnHead() == cur->getOnHead()) &&
