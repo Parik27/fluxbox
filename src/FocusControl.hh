@@ -70,9 +70,10 @@ public:
      * @param winlist the windowlist to cycle through
      * @param pat pattern for matching focusables
      * @param reverse reverse the cycle order
+     * @param wrap after the first or last element (i.e don't cycle)
      */
     void cycleFocus(const FocusableList &winlist, const ClientPattern *pat = 0,
-                    bool reverse = false);
+                    bool reverse = false, bool wrap = true);
     
     void goToWindowNumber(const FocusableList &winlist, int num,
                           const ClientPattern *pat = 0);

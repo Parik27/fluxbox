@@ -697,7 +697,7 @@ void BScreen::buttonPressEvent(XButtonEvent &be) {
     }
 }
 
-void BScreen::cycleFocus(int options, const ClientPattern *pat, bool reverse) {
+void BScreen::cycleFocus(int options, const ClientPattern *pat, bool reverse, bool wrap) {
     // get modifiers from event that causes this for focus order cycling
     XEvent ev = Fluxbox::instance()->lastEvent();
     unsigned int mods = 0;
@@ -716,7 +716,7 @@ void BScreen::cycleFocus(int options, const ClientPattern *pat, bool reverse) {
 
     const FocusableList *win_list =
         FocusableList::getListFromOptions(*this, options);
-    focusControl().cycleFocus(*win_list, pat, reverse);
+    focusControl().cycleFocus(*win_list, pat, reverse, wrap);
 
 }
 

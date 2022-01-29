@@ -231,8 +231,10 @@ public:
      * @param opts focus options
      * @param pat specific pattern to match windows with
      * @param reverse the order of cycling
+     * @param wrap after the first or last element (i.e cycle or not)
      */
-    void cycleFocus(int opts = 0, const ClientPattern *pat = 0, bool reverse = false);
+    void cycleFocus(int opts = 0, const ClientPattern *pat = 0, bool reverse = false,
+                    bool wrap = true);
 
     bool isCycling() const { return m_state.cycling; }
 

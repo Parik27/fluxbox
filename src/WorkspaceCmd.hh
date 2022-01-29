@@ -76,22 +76,24 @@ private:
 
 class NextWindowCmd: public FbTk::Command<void> {
 public:
-    explicit NextWindowCmd(int option, std::string &pat):
-            m_option(option), m_pat(pat.c_str()) { }
+    explicit NextWindowCmd(int option, std::string &pat, bool wrap = true) :
+        m_option(option), m_pat(pat.c_str()), m_wrap(wrap) { }
     void execute();
 private:
     const int m_option;
     const ClientPattern m_pat;
+    const bool m_wrap;
 };
 
 class PrevWindowCmd: public FbTk::Command<void> {
 public:
-    explicit PrevWindowCmd(int option, std::string &pat):
-            m_option(option), m_pat(pat.c_str()) { }
+    explicit PrevWindowCmd(int option, std::string &pat, bool wrap = true) :
+        m_option(option), m_pat(pat.c_str()), m_wrap(wrap) { }
     void execute();
 private:
     const int m_option;
     const ClientPattern m_pat;
+    const bool m_wrap;
 };
 
 class GoToWindowCmd: public FbTk::Command<void> {

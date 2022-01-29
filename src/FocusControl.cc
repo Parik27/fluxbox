@@ -94,7 +94,8 @@ FocusControl::FocusControl(BScreen &screen):
 }
 
 void FocusControl::cycleFocus(const FocusableList &window_list,
-                              const ClientPattern *pat, bool cycle_reverse) {
+                              const ClientPattern *pat, bool cycle_reverse,
+                              bool wrap) {
 
     if (!m_cycling_list) {
         if (m_screen.isCycling())
@@ -125,11 +126,16 @@ void FocusControl::cycleFocus(const FocusableList &window_list,
 
     // find the next window in the list that works
     while (true) {
-        if (cycle_reverse && it == it_begin)
+        if (cycle_reverse && it == it_begin) {
+            if (!wrap)
+                return;
             it = it_end;
-        else if (!cycle_reverse && it == it_end)
+        } else if (!cycle_reverse && it == it_end) {
+            if (!wrap)
+                return;
             it = it_begin;
-        else
+
+        } else
             cycle_reverse ? --it : ++it;
         // give up [do nothing] if we reach the current focused again
         if (it == m_cycling_window)

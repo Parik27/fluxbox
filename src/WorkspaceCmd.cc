@@ -173,16 +173,16 @@ FbTk::Command<void> *parseWindowList(const string &command,
     FocusableList::parseArgs(args, opts, pat);
     if (command == "attach")
         return new AttachCmd(pat);
-    else if (command == "nextwindow")
-        return new NextWindowCmd(opts, pat);
-    else if (command == "nextgroup") {
+    else if (command == "nextwindow" || command == "rightwindow")
+        return new NextWindowCmd(opts, pat, command == "nextwindow");
+    else if (command == "nextgroup"  || command == "rightgroup") {
         opts |= FocusableList::LIST_GROUPS;
-        return new NextWindowCmd(opts, pat);
-    } else if (command == "prevwindow")
-        return new PrevWindowCmd(opts, pat);
-    else if (command == "prevgroup") {
+        return new NextWindowCmd(opts, pat, command == "nextgroup");
+    } else if (command == "prevwindow" || command == "leftwindow")
+        return new PrevWindowCmd(opts, pat, command == "prevwindow");
+    else if (command == "prevgroup" || command == "leftgroup") {
         opts |= FocusableList::LIST_GROUPS;
-        return new PrevWindowCmd(opts, pat);
+        return new PrevWindowCmd(opts, pat, command == "prevgroup");
     } else if (command == "arrangewindows") {
         int method = ArrangeWindowsCmd::UNSPECIFIED;
         return new ArrangeWindowsCmd(method,pat);
@@ -213,9 +213,13 @@ FbTk::Command<void> *parseWindowList(const string &command,
 
 REGISTER_COMMAND_PARSER(attach, parseWindowList, void);
 REGISTER_COMMAND_PARSER(nextwindow, parseWindowList, void);
+REGISTER_COMMAND_PARSER(rightwindow, parseWindowList, void);
 REGISTER_COMMAND_PARSER(nextgroup, parseWindowList, void);
+REGISTER_COMMAND_PARSER(rightgroup, parseWindowList, void);
 REGISTER_COMMAND_PARSER(prevwindow, parseWindowList, void);
 REGISTER_COMMAND_PARSER(prevgroup, parseWindowList, void);
+REGISTER_COMMAND_PARSER(leftwindow, parseWindowList, void);
+REGISTER_COMMAND_PARSER(leftgroup, parseWindowList, void);
 REGISTER_COMMAND_PARSER(arrangewindows, parseWindowList, void);
 REGISTER_COMMAND_PARSER(arrangewindowsvertical, parseWindowList, void);
 REGISTER_COMMAND_PARSER(arrangewindowshorizontal, parseWindowList, void);
@@ -250,13 +254,13 @@ void AttachCmd::execute() {
 void NextWindowCmd::execute() {
     BScreen *screen = Fluxbox::instance()->keyScreen();
     if (screen != 0)
-        screen->cycleFocus(m_option, &m_pat, false);
+        screen->cycleFocus(m_option, &m_pat, false, m_wrap);
 }
 
 void PrevWindowCmd::execute() {
     BScreen *screen = Fluxbox::instance()->keyScreen();
     if (screen != 0)
-        screen->cycleFocus(m_option, &m_pat, true);
+        screen->cycleFocus(m_option, &m_pat, true, m_wrap);
 }
 
 FbTk::Command<void> *GoToWindowCmd::parse(const string &command,
