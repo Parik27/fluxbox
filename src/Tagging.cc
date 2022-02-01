@@ -118,7 +118,8 @@ void Tagging::setupClient(WinClient &winclient) {
 }
 
 void Tagging::updateClientClose(WinClient &winclient) {
-    if (winclient.fbwindow() == m_tagged_window && winclient.fbwindow()->numClients() == 0) {
+    if (winclient.fbwindow() && winclient.fbwindow() == m_tagged_window &&
+            winclient.fbwindow()->numClients() == 0) {
         m_tagged_window = nullptr;
         
         // If a workspace was tagged, keep the tabbing behaviour but pass it over to any
